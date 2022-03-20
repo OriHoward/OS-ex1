@@ -168,7 +168,6 @@ void openTCP() {
     client = initClient();
     printf("arrived here\n");
     initSocket(client);
-    connectToServer(client);
     printf("connected");
 
 }

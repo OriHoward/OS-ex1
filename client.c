@@ -6,11 +6,12 @@
 #include <unistd.h>
 #include "client.h"
 
-pclient initClient () {
-    return (pclient)malloc(sizeof(struct Client));
+pclient initClient() {
+    return (pclient) malloc(sizeof(struct Client));
 }
 
 int initSocket(pclient client) {
+    struct sockaddr_in server;
     client->sock = socket(AF_INET, SOCK_STREAM, 0);
     if (client->sock == -1) {
         printf("Could not create socket");
@@ -18,17 +19,14 @@ int initSocket(pclient client) {
     }
     puts("Socket created");
 
-    client->server->sin_addr.s_addr = inet_addr("127.0.0.1");
-    client->server->sin_family = AF_INET;
-    client->server->sin_port = htons(8888);
-    return 1;
-}
-
-int connectToServer(pclient client) {
-    if (connect(client->sock, (struct sockaddr *) &client->server, sizeof(client->server)) < 0) {
+    server.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server.sin_family = AF_INET;
+    server.sin_port = htons(8888);
+    if (connect(client->sock, (struct sockaddr *) &server, sizeof(server)) < 0) {
         perror("connect failed. Error");
         return 0;
     }
     puts("Connected\n");
     return 1;
 }
+
