@@ -93,13 +93,16 @@ int handleCmd() {
 
     if (startsWith(cmd, "COPY")) {
         handleCopy();
+        return 1;
     }
     if (!strcmp("DIR", cmd)) {
         handleDir();
+        return 1;
     }
-    if (!strcmp("abc", cmd)) {
-        printf("aaaa\n");
+    if (!strcmp("TCP PORT", cmd)) {
         openTCP();
+        printf("\n");
+        return 1;
     }
 
     /**
@@ -166,8 +169,5 @@ void handleDir() {
 void openTCP() {
     pclient client = NULL;
     client = initClient();
-    printf("arrived here\n");
     initSocket(client);
-    printf("connected");
-
 }

@@ -11,14 +11,13 @@ pserver initServer() {
 }
 
 
-int runServer(pserver serv) {
+void runServer(pserver serv) {
     struct sockaddr_in server, client;
     serv->socket_desc = socket(AF_INET, SOCK_STREAM, 0);
     if (serv->socket_desc == -1) {
         printf("Could not create socket\n");
     }
     puts("Socket created\n");
-
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(8888);
@@ -40,9 +39,7 @@ int runServer(pserver serv) {
         perror("accept failed");
         return 0;
     }
-    puts("Connection accepted");
-
-    return 1;
+    puts("Connection accepted\n");
 
 }
 
@@ -50,7 +47,9 @@ int main() {
     pserver server = NULL;
     server = initServer();
     runServer(server);
-
+    while (1) {
+        continue;
+    }
 //    //Receive a message from client
 //    while ((read_size = recv(client_sock, client_message, 2000, 0)) > 0) {
 //        //Send the message back to client

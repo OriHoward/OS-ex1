@@ -7,7 +7,7 @@ typedef struct Server {
     char client_message[2000];
 } *pserver;
 
-int runServer();
+void runServer();
 
 pserver initServer();
 
