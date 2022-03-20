@@ -23,6 +23,10 @@ int startsWith(const char *a, const char *b);
 
 int handleCmd();
 
+void handleCopy();
+
+void handleDir();
+
 int main() {
 
     // tie the handler to the SGNCHLD signal
@@ -45,12 +49,13 @@ void CShell() {
         // bypass empty commands
         if (!strcmp("", cmd)) continue;
         // check for "exit" command
-        if (!strcmp("exit", cmd)) break;
+        if (!strcmp("EXIT", cmd)) break;
         // handle commands
         if (handleCmd()) { continue; }
 
         // fit the command into *argv[]
         convertCmd();
+
 
         // fork and execute the command
         pid = fork();
@@ -58,7 +63,9 @@ void CShell() {
             printf("failed to create a child\n");
         } else if (0 == pid) {
             // execute a command
-            execvp(argv[0], argv);
+            if (execvp(argv[0], argv) == -1) {
+                break;
+            }
         } else {
             // wait for the command to finish if "&" is not present
             if (NULL == argv[i]) waitpid(pid, NULL, 0);
@@ -73,20 +80,43 @@ int handleCmd() {
         return 1;
     }
     // check if a sentence start with cd to change file
+    // the chdir is a system function.
     if (startsWith(cmd, "cd")) {
         char *to = cmd + 3;
         chdir(to);
         return 1;
     }
+    // the fopen,fread,fwrite are library functions.
+
+    if (startsWith(cmd, "COPY")) {
+        handleCopy();
+    }
+    if (!strcmp("DIR", cmd)) {
+        handleDir();
+    }
+
+    /**
+     * if we get only one command we run it with system function - clause ח.
+     * The system() is a library function that uses fork(2) to create a child
+       process that executes the shell command specified in command
+       using execl(3) as follows:
+           execl("/bin/sh", "sh", "-c", command, (char *) NULL);
+       system() returns after the command has been completed.
+     */
+//    if (!strchr(cmd,' ')) {
+//        system(cmd);
+//        return 1;
+//    }
+
 
     return 0;
 }
 
 void getCmd() {
     // clause A :
-//    printf("Shell>\t");
+//    printf("Yes master?\t");
     // clause B - getting the current working directory path with getcwd function:
-    if (getcwd(cwd, sizeof (cwd)) == NULL) {
+    if (getcwd(cwd, sizeof(cwd)) == NULL) {
         perror("getcwd() error");
     } else {
         printf("<%s>", cwd);
@@ -135,3 +165,10 @@ int startsWith(const char *a, const char *b) {
 //    else fprintf(pFile, "[LOG] child proccess terminated.\n");
 //    fclose(pFile);
 //}
+void handleCopy() {
+    printf("empty");
+}
+
+void handleDir() {
+    printf("dir");
+}
