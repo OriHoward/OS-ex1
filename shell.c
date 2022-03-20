@@ -164,11 +164,8 @@ void handleDir() {
 }
 
 void openTCP() {
-    pserver server = NULL;
     pclient client = NULL;
-    server = initServer();
     client = initClient();
-    runServer(server);
     printf("arrived here\n");
     initSocket(client);
     connectToServer(client);

@@ -4,10 +4,13 @@ CFLAGS = -Wall
 
 all: shell
 
-shell: shell.o client.o server.o
-	${CC} ${CFLAGS} -o shell shell.o client.o server.o
+shell: shell.o client.o
+	${CC} ${CFLAGS} -o shell shell.o client.o
 
-shell.o: shell.c client.h server.h
+server: server.o
+	${CC} ${CFLAGS} -o server server.o
+
+shell.o: shell.c client.h
 	${CC} ${CFLAGS} -c shell.c
 
 server.o: server.c server.h
