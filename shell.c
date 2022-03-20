@@ -11,14 +11,17 @@
 
 char cmd[MAX_SIZE_CMD];                // string holder for the command
 char *argv[MAX_SIZE_ARG];            // an array for command and arguments
+char cwd[256];
 pid_t pid;                                        // global variable for the child process ID
 char i;                                                // global for loop counter
 
-void get_cmd();                                // get command string from the user
-void convert_cmd();                        // convert the command string to the required format by execvp()
-void c_shell();                                // to start the shell
+void getCmd();                                // get command string from the user
+void convertCmd();                        // convert the command string to the required format by execvp()
+void CShell();                                // to start the shell
 //void log_handle(int sig);            // signal handler to add log statements
 int startsWith(const char *a, const char *b);
+
+int handleCmd();
 
 int main() {
 
@@ -30,37 +33,24 @@ int main() {
 //    signal(SIGCHLD, NULL);
 
     // start the shell
-    c_shell();
+    CShell();
 
     return 0;
 }
 
-void c_shell() {
+void CShell() {
     while (1) {
         // get the command from user
-        get_cmd();
-
-        //todo elseif
-
-        // check if a sentence starts with ECHO and prints the echo
-        if (startsWith(cmd, "ECHO")) {
-            printf("%s \n", cmd + 5);
-            continue;
-        }
-        if (startsWith(cmd, "cd")) {
-            char *to = cmd + 3;
-            chdir(to);
-            continue;
-        }
-
+        getCmd();
         // bypass empty commands
         if (!strcmp("", cmd)) continue;
-
         // check for "exit" command
         if (!strcmp("exit", cmd)) break;
+        // handle commands
+        if (handleCmd()) { continue; }
 
         // fit the command into *argv[]
-        convert_cmd();
+        convertCmd();
 
         // fork and execute the command
         pid = fork();
@@ -76,16 +66,40 @@ void c_shell() {
     }
 }
 
-void get_cmd() {
+int handleCmd() {
+    // check if a sentence starts with ECHO and prints the echo
+    if (startsWith(cmd, "ECHO")) {
+        printf("%s \n", cmd + 5);
+        return 1;
+    }
+    // check if a sentence start with cd to change file
+    if (startsWith(cmd, "cd")) {
+        char *to = cmd + 3;
+        chdir(to);
+        return 1;
+    }
+
+    return 0;
+}
+
+void getCmd() {
+    // clause A :
+//    printf("Shell>\t");
+    // clause B - getting the current working directory path with getcwd function:
+    if (getcwd(cwd, sizeof (cwd)) == NULL) {
+        perror("getcwd() error");
+    } else {
+        printf("<%s>", cwd);
+    }
+
     // get command from user
-    printf("Shell>\t");
     fgets(cmd, MAX_SIZE_CMD, stdin);
     // remove trailing newline
     if ((strlen(cmd) > 0) && (cmd[strlen(cmd) - 1] == '\n'))
         cmd[strlen(cmd) - 1] = '\0';
 }
 
-void convert_cmd() {
+void convertCmd() {
     // split string into argv
     char *ptr;
     i = 0;
@@ -96,6 +110,7 @@ void convert_cmd() {
         i++;
         ptr = strtok(NULL, " ");
     }
+    //////// This array MUST be NULL terminated, i.e, the last element of argv must be a NULL pointer.
 
 //    // check for "&"
 //    if(!strcmp("&", argv[i-1])){
