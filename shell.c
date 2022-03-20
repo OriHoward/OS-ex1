@@ -5,9 +5,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <signal.h>
+#include "client.h"
+#include "server.h"
 
 #define    MAX_SIZE_CMD    256
 #define    MAX_SIZE_ARG    16
+
 
 char cmd[MAX_SIZE_CMD];                // string holder for the command
 char *argv[MAX_SIZE_ARG];            // an array for command and arguments
@@ -18,8 +21,9 @@ char i;                                                // global for loop counte
 void getCmd();                                // get command string from the user
 void convertCmd();                        // convert the command string to the required format by execvp()
 void CShell();                                // to start the shell
-//void log_handle(int sig);            // signal handler to add log statements
 int startsWith(const char *a, const char *b);
+
+void openTCP();
 
 int handleCmd();
 
@@ -57,7 +61,7 @@ void CShell() {
         convertCmd();
 
 
-        // fork and execute the command
+//         fork and execute the command
         pid = fork();
         if (-1 == pid) {
             printf("failed to create a child\n");
@@ -67,8 +71,7 @@ void CShell() {
                 break;
             }
         } else {
-            // wait for the command to finish if "&" is not present
-            if (NULL == argv[i]) waitpid(pid, NULL, 0);
+            waitpid(pid, NULL, 0);
         }
     }
 }
@@ -94,6 +97,10 @@ int handleCmd() {
     if (!strcmp("DIR", cmd)) {
         handleDir();
     }
+    if (!strcmp("abc", cmd)) {
+        printf("aaaa\n");
+        openTCP();
+    }
 
     /**
      * if we get only one command we run it with system function - clause ח.
@@ -102,6 +109,7 @@ int handleCmd() {
        using execl(3) as follows:
            execl("/bin/sh", "sh", "-c", command, (char *) NULL);
        system() returns after the command has been completed.
+       source - linux man page
      */
 //    if (!strchr(cmd,' ')) {
 //        system(cmd);
@@ -136,20 +144,10 @@ void convertCmd() {
     ptr = strtok(cmd, " ");
     while (ptr != NULL) {
 //        printf("%s\n", ptr);
-        argv[i] = ptr;
-        i++;
+        argv[i++] = ptr;
         ptr = strtok(NULL, " ");
     }
-    //////// This array MUST be NULL terminated, i.e, the last element of argv must be a NULL pointer.
 
-//    // check for "&"
-//    if(!strcmp("&", argv[i-1])){
-//        argv[i-1] = NULL;
-//        argv[i] = "&";
-//    }else{
-//        argv[i] = NULL;
-//    }
-//    //printf("%d\n", i);
 }
 
 int startsWith(const char *a, const char *b) {
@@ -157,18 +155,23 @@ int startsWith(const char *a, const char *b) {
     return 0;
 }
 
-//void log_handle(int sig){
-//    //printf("[LOG] child proccess terminated.\n");
-//    FILE *pFile;
-//    pFile = fopen("log.txt", "a");
-//    if(pFile==NULL) perror("Error opening file.");
-//    else fprintf(pFile, "[LOG] child proccess terminated.\n");
-//    fclose(pFile);
-//}
 void handleCopy() {
     printf("empty");
 }
 
 void handleDir() {
     printf("dir");
+}
+
+void openTCP() {
+    pserver server = NULL;
+    pclient client = NULL;
+    server = initServer();
+    client = initClient();
+    runServer(server);
+    printf("arrived here\n");
+    initSocket(client);
+    connectToServer(client);
+    printf("connected");
+
 }
