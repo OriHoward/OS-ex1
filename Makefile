@@ -2,7 +2,7 @@ CC = gcc
 AR = ar
 CFLAGS = -Wall
 
-all: shell
+all: shell server
 
 shell: shell.o client.o
 	${CC} ${CFLAGS} -o shell shell.o client.o

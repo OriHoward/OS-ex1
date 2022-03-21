@@ -21,9 +21,8 @@ int main() {
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(8888);
 
-    int enable = 1;
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
-        error("setsockopt(SO_REUSEADDR) failed");
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &(int) {1}, sizeof(int)) < 0)
+        perror("setsockopt(SO_REUSEADDR) failed");
 
     if (bind(sock, (struct sockaddr *) &server, sizeof(server)) < 0) {
         perror("bind failed. Error");
@@ -32,7 +31,7 @@ int main() {
     puts("bind done");
 
 
-    listen(sock, 1);
+    listen(sock, 3);
 
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
@@ -47,8 +46,7 @@ int main() {
 
     //Receive a message from client
     while ((read_size = recv(client_sock, client_message, 2000, 0)) > 0) {
-        //Send the message back to client
-        write(client_sock, client_message, strlen(client_message));
+        printf("%s", client_message);
     }
 
     if (read_size == 0) {
@@ -60,3 +58,5 @@ int main() {
 
     return 0;
 }
+
+////////////////////////////////

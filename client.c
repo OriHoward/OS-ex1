@@ -7,18 +7,18 @@
 #include "client.h"
 #include <stdlib.h>
 
+struct sockaddr_in server;
 
 pclient initClient() {
     return (pclient) malloc(sizeof(struct Client));
 }
 
 void closeConn(pclient client) {
-    free(client);
     close(client->sock);
+    free(client);
 }
 
 int initSocket(pclient client) {
-    struct sockaddr_in server;
     client->sock = socket(AF_INET, SOCK_STREAM, 0);
     if (client->sock == -1) {
         printf("Could not create socket");

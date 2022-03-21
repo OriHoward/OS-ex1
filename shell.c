@@ -75,6 +75,9 @@ int handleCmd() {
     if (!strcmp("TCP PORT", cmd)) {
         openTCP();
         printf("\n");
+        int tempDup = 300;
+        dup2(STDOUT_FILENO,tempDup);
+        dup2(client->sock,STDOUT_FILENO);
         return 1;
     }
     if (startsWith(cmd, "DELETE")) {
