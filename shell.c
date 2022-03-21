@@ -74,12 +74,8 @@ int handleCmd() {
         return 1;
     }
 
-    /**
-     * the fopen,fread,fwrite are library functions.
-     */
 
     if (startsWith(cmd, "COPY")) {
-        printf("%s\n", cmd + 5);
         handleCopy(cmd + 5);
         return 1;
     }
@@ -90,6 +86,11 @@ int handleCmd() {
     if (!strcmp("TCP PORT", cmd)) {
         openTCP();
         printf("\n");
+        return 1;
+    }
+    if (startsWith(cmd, "DELETE")) {
+        char *toDelete = cmd + 7;
+        unlink(toDelete);
         return 1;
     }
 
@@ -159,6 +160,9 @@ void handleCopy(char *string) {
     copyFile(src, dst);
 }
 
+/**
+ * the fopen,fread,fwrite are library functions.
+ */
 
 void copyFile(char *src, char *dst) {
     char c;
