@@ -79,7 +79,8 @@ int handleCmd() {
      */
 
     if (startsWith(cmd, "COPY")) {
-        handleCopy();
+        printf("%s\n", cmd + 5);
+        handleCopy(cmd + 5);
         return 1;
     }
     if (!strcmp("DIR", cmd)) {
@@ -128,7 +129,7 @@ void getCmd() {
 void convertCmd() {
     // split string into argv
     char *ptr;
-    i = 0;
+    int i = 0;
     ptr = strtok(cmd, " ");
     while (ptr != NULL) {
         argv[i++] = ptr;
@@ -141,10 +142,42 @@ int startsWith(const char *a, const char *b) {
     return 0;
 }
 
-void handleCopy() {
-    printf("empty");
+void handleCopy(char *string) {
+    char src[50];
+    char dst[50];
+    int index = 0;
+    int dstInd = 0;
+    while (string[index] != ' ') {
+        src[index] = string[index];
+        index++;
+    }
+    index++;
+    for (int i = index; i < strlen(string); ++i) {
+        dst[dstInd] = string[i];
+        dstInd++;
+    }
+    copyFile(src, dst);
 }
 
+
+void copyFile(char *src, char *dst) {
+    char c;
+    FILE *srcFile = fopen(src, "rb");
+    if (srcFile == NULL) {
+        printf("Cannot open file %s\n", src);
+        return;
+    }
+    FILE *dstFile = fopen(dst, "wb");
+    if (dstFile == NULL) {
+        printf("Cannot open file %s\n", dst);
+        return;
+    }
+    while (fread(&c, 1, 1, srcFile) == 1) {
+        fwrite(&c, 1, 1, dstFile);
+    }
+    fclose(srcFile);
+    fclose(dstFile);
+}
 
 void openTCP() {
     client = initClient();
@@ -163,3 +196,4 @@ void handleDir() {
     }
     return;
 }
+

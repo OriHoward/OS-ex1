@@ -20,4 +20,4 @@ client.o: client.c client.h
 	${CC} ${CFLAGS} -c client.c
 
 clean:
-	rm -f *.a *.o shell
+	rm -f *.a *.o shell server

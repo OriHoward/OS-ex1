@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "client.h"
+#include <stdlib.h>
 
 
 pclient initClient() {
