@@ -16,10 +16,9 @@ void getCmd();
 
 void convertCmd();
 
-void CShell();                                // to start the shell
-int startsWith(const char *a, const char *b);
+void CShell();
 
-void copyFile(char *src, char *dst);
+int startsWith(const char *a, const char *b);
 
 void handleDir();
 
@@ -28,6 +27,8 @@ void openTCP();
 int handleCmd();
 
 void handleCopy();
+
+void copyFile(char *src, char *dst);
 
 void handleDir();
 

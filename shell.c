@@ -11,21 +11,10 @@
 #include "shell.h"
 
 
-int main() {
-
-    // tie the handler to the SGNCHLD signal
-
-//    signal(SIGCHLD, log_handle);
-//
-//// I changed it to NULL - need to check
-//    signal(SIGCHLD, NULL);
-
-    // start the shell
-    CShell();
-
-    return 0;
-}
-
+/**
+ * The main loop of the shell
+ * The loop includes getCmd func, convertCmd func and the fork.
+ */
 void CShell() {
     while (1) {
         // get the command from user
@@ -57,7 +46,7 @@ void CShell() {
 }
 
 /**
- * this function handles the commands we get from the user that are necessary
+ * this function handles the commands we get from the user that are necessary from the assigment.
  * @return
  */
 int handleCmd() {
@@ -108,10 +97,12 @@ int handleCmd() {
 //        return 1;
 //    }
 
-
     return 0;
 }
 
+/**
+ * This functions get the input command from the user.
+ */
 void getCmd() {
     // clause A :
 //    printf("Yes master?\t");
@@ -127,6 +118,9 @@ void getCmd() {
         cmd[strlen(cmd) - 1] = '\0';
 }
 
+/**
+ * Splits the string command that we get from the user to an array of strings.
+ */
 void convertCmd() {
     // split string into argv
     char *ptr;
@@ -137,6 +131,7 @@ void convertCmd() {
         ptr = strtok(NULL, " ");
     }
 }
+
 
 int startsWith(const char *a, const char *b) {
     if (strncmp(a, b, strlen(b)) == 0) return 1;
@@ -201,3 +196,8 @@ void handleDir() {
     return;
 }
 
+
+int main() {
+    CShell();
+    return 0;
+}
