@@ -6,30 +6,10 @@
 #include <unistd.h>
 #include <signal.h>
 #include "client.h"
-#include "server.h"
+#include <dirent.h>
+#include <limits.h>
+#include "shell.h"
 
-#define    MAX_SIZE_CMD    256
-#define    MAX_SIZE_ARG    16
-
-
-char cmd[MAX_SIZE_CMD];                // string holder for the command
-char *argv[MAX_SIZE_ARG];            // an array for command and arguments
-char cwd[256];
-pid_t pid;                                        // global variable for the child process ID
-char i;                                                // global for loop counter
-
-void getCmd();                                // get command string from the user
-void convertCmd();                        // convert the command string to the required format by execvp()
-void CShell();                                // to start the shell
-int startsWith(const char *a, const char *b);
-
-void openTCP();
-
-int handleCmd();
-
-void handleCopy();
-
-void handleDir();
 
 int main() {
 
@@ -61,7 +41,7 @@ void CShell() {
         convertCmd();
 
 
-//         fork and execute the command
+//      fork and execute the command
         pid = fork();
         if (-1 == pid) {
             printf("failed to create a child\n");
@@ -76,6 +56,10 @@ void CShell() {
     }
 }
 
+/**
+ * this function handles the commands we get from the user that are necessary
+ * @return
+ */
 int handleCmd() {
     // check if a sentence starts with ECHO and prints the echo
     if (startsWith(cmd, "ECHO")) {
@@ -89,7 +73,10 @@ int handleCmd() {
         chdir(to);
         return 1;
     }
-    // the fopen,fread,fwrite are library functions.
+
+    /**
+     * the fopen,fread,fwrite are library functions.
+     */
 
     if (startsWith(cmd, "COPY")) {
         handleCopy();
@@ -132,10 +119,8 @@ void getCmd() {
     } else {
         printf("<%s>", cwd);
     }
-
-    // get command from user
+    // get the command from the user
     fgets(cmd, MAX_SIZE_CMD, stdin);
-    // remove trailing newline
     if ((strlen(cmd) > 0) && (cmd[strlen(cmd) - 1] == '\n'))
         cmd[strlen(cmd) - 1] = '\0';
 }
@@ -146,11 +131,9 @@ void convertCmd() {
     i = 0;
     ptr = strtok(cmd, " ");
     while (ptr != NULL) {
-//        printf("%s\n", ptr);
         argv[i++] = ptr;
         ptr = strtok(NULL, " ");
     }
-
 }
 
 int startsWith(const char *a, const char *b) {
@@ -162,12 +145,21 @@ void handleCopy() {
     printf("empty");
 }
 
-void handleDir() {
-    printf("dir");
-}
 
 void openTCP() {
-    pclient client = NULL;
     client = initClient();
     initSocket(client);
+}
+
+void handleDir() {
+    DIR *dr;
+    struct dirent *dir;
+    dr = opendir(".");
+    if (dr) {
+        while ((dir = readdir(dr)) != NULL) {
+            printf("%s\n", dir->d_name);
+        }
+        closedir(dr);
+    }
+    return;
 }

@@ -10,10 +10,10 @@ shell: shell.o client.o
 server: server.o
 	${CC} ${CFLAGS} -o server server.o
 
-shell.o: shell.c client.h
+shell.o: shell.c client.h shell.h
 	${CC} ${CFLAGS} -c shell.c
 
-server.o: server.c server.h
+server.o: server.c
 	${CC} ${CFLAGS} -c server.c
 
 client.o: client.c client.h

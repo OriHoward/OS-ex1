@@ -11,7 +11,6 @@ int initSocket();
 
 pclient initClient();
 
-
-int closeConn();
+void closeConn(pclient client);
 
 #endif //SYSTEM_CLIENT_H

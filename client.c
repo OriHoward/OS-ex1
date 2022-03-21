@@ -6,8 +6,14 @@
 #include <unistd.h>
 #include "client.h"
 
+
 pclient initClient() {
     return (pclient) malloc(sizeof(struct Client));
+}
+
+void closeConn(pclient client) {
+    free(client);
+    close(client->sock);
 }
 
 int initSocket(pclient client) {
