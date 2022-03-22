@@ -10,6 +10,7 @@ char cmd[MAX_SIZE_CMD];
 char *argv[MAX_SIZE_ARG];
 char cwd[256];
 pid_t pid;
+int isConnected = 0;
 pclient client = NULL;
 int tempDup = 300;
 void getCmd();

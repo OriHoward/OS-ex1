@@ -55,8 +55,11 @@ int handleCmd() {
         printf("%s \n", cmd + 5);
         return 1;
     }
-    // check if a sentence start with cd to change file
-    // the chdir is a system function.
+    /**
+     * checks if a sentence start with cd to change file
+       The chdir is a system function.
+     */
+
     if (startsWith(cmd, "cd")) {
         char *to = cmd + 3;
         chdir(to);
@@ -78,14 +81,21 @@ int handleCmd() {
         dup2(client->sock, STDOUT_FILENO);
         return 1;
     }
+    /**
+     * unlink is a system call
+     */
     if (startsWith(cmd, "DELETE")) {
         char *toDelete = cmd + 7;
         unlink(toDelete);
         return 1;
     }
     if (!strcmp("LOCAL", cmd)) {
-        closeConn(client);
-        dup2(tempDup, STDOUT_FILENO);
+        if (isConnected) {
+            isConnected = 0;
+            closeConn(client);
+            dup2(tempDup, STDOUT_FILENO);
+        }
+        return 1;
     }
 
     /**
@@ -147,6 +157,7 @@ int startsWith(const char *a, const char *b) {
     if (strncmp(a, b, strlen(b)) == 0) return 1;
     return 0;
 }
+
 /**
  * handle the Copy file to another file
  * @param string
@@ -192,13 +203,16 @@ void copyFile(char *src, char *dst) {
     fclose(srcFile);
     fclose(dstFile);
 }
+
 /**
  * opens a TCP connection (with client and the server)
  */
 void openTCP() {
     client = initClient();
     initSocket(client);
+    isConnected = 1;
 }
+
 /**
  * Dir func - shows all the files in the current directory
  */
