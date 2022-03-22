@@ -74,16 +74,18 @@ int handleCmd() {
     }
     if (!strcmp("TCP PORT", cmd)) {
         openTCP();
-        printf("\n");
-        int tempDup = 300;
-        dup2(STDOUT_FILENO,tempDup);
-        dup2(client->sock,STDOUT_FILENO);
+        dup2(STDOUT_FILENO, tempDup);
+        dup2(client->sock, STDOUT_FILENO);
         return 1;
     }
     if (startsWith(cmd, "DELETE")) {
         char *toDelete = cmd + 7;
         unlink(toDelete);
         return 1;
+    }
+    if (!strcmp("LOCAL", cmd)) {
+        closeConn(client);
+        dup2(tempDup, STDOUT_FILENO);
     }
 
     /**
@@ -151,10 +153,12 @@ void handleCopy(char *string) {
         index++;
     }
     index++;
+    src[index] = '\0';
     for (int i = index; i < strlen(string); ++i) {
         dst[dstInd] = string[i];
         dstInd++;
     }
+    dst[dstInd] = '\0';
     copyFile(src, dst);
 }
 

@@ -33,7 +33,7 @@ int initSocket(pclient client) {
         perror("connect failed. Error");
         return 0;
     }
-    puts("Connected\n");
+    puts("Connected");
     return 1;
 }
 

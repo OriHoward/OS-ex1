@@ -11,7 +11,7 @@ char *argv[MAX_SIZE_ARG];
 char cwd[256];
 pid_t pid;
 pclient client = NULL;
-
+int tempDup = 300;
 void getCmd();
 
 void convertCmd();

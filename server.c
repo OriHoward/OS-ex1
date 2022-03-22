@@ -6,9 +6,9 @@
 #include<unistd.h>
 
 int main() {
-    int sock, client_sock, c, read_size;
+    int sock, clientSock, c, read_size;
     struct sockaddr_in server, client;
-    char client_message[2000];
+    char clientMsg[1024];
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1) {
@@ -31,22 +31,28 @@ int main() {
     puts("bind done");
 
 
-    listen(sock, 3);
+    listen(sock, 1);
 
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
 
 
-    client_sock = accept(sock, (struct sockaddr *) &client, (socklen_t *) &c);
-    if (client_sock < 0) {
+    clientSock = accept(sock, (struct sockaddr *) &client, (socklen_t *) &c);
+    if (clientSock < 0) {
         perror("accept failed");
         return 1;
     }
     puts("Connection accepted");
 
     //Receive a message from client
-    while ((read_size = recv(client_sock, client_message, 2000, 0)) > 0) {
-        printf("%s", client_message);
+    while ((read_size = recv(clientSock, clientMsg, 1024, 0)) > 0) {
+        puts("should get printed once");
+        if (!strcmp(clientMsg,"EXIT")) {
+            break;
+        }
+//        clientMsg[1024] = '\0';
+//        puts(clientMsg);
+//        puts("after");
     }
 
     if (read_size == 0) {
@@ -59,4 +65,3 @@ int main() {
     return 0;
 }
 
-////////////////////////////////
