@@ -44,14 +44,17 @@ int main() {
     }
     puts("Connection accepted");
 
+
     //Receive a message from client
-    while ((read_size = recv(clientSock, clientMsg, 1024, 0)) > 0) {
+    while ((read_size = recv(clientSock, clientMsg, sizeof(clientMsg), 0)) > 0) {
         if (!strcmp(clientMsg, "EXIT")) {
             break;
         }
         clientMsg[sizeof(clientMsg) -1] = '\0';
         puts(clientMsg);
-        memset(clientMsg,0, strlen(clientMsg));
+        memset(clientMsg,0, sizeof (clientMsg));
+        clientMsg[sizeof(clientMsg) -1] = '\0';
+
     }
 
     if (read_size == 0) {
