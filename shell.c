@@ -137,12 +137,20 @@ void convertCmd() {
     }
 }
 
-
+/**
+ * Check if a string starts with a specific substring
+ * @param a
+ * @param b
+ * @return
+ */
 int startsWith(const char *a, const char *b) {
     if (strncmp(a, b, strlen(b)) == 0) return 1;
     return 0;
 }
-
+/**
+ * handle the Copy file to another file
+ * @param string
+ */
 void handleCopy(char *string) {
     char src[50];
     char dst[50];
@@ -184,12 +192,16 @@ void copyFile(char *src, char *dst) {
     fclose(srcFile);
     fclose(dstFile);
 }
-
+/**
+ * opens a TCP connection (with client and the server)
+ */
 void openTCP() {
     client = initClient();
     initSocket(client);
 }
-
+/**
+ * Dir func - shows all the files in the current directory
+ */
 void handleDir() {
     DIR *dr;
     struct dirent *dir;
@@ -203,7 +215,10 @@ void handleDir() {
     return;
 }
 
-
+/**
+ * the main to run the shell
+ * @return
+ */
 int main() {
     CShell();
     return 0;
