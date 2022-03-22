@@ -46,13 +46,12 @@ int main() {
 
     //Receive a message from client
     while ((read_size = recv(clientSock, clientMsg, 1024, 0)) > 0) {
-        puts("should get printed once");
-        if (!strcmp(clientMsg,"EXIT")) {
+        if (!strcmp(clientMsg, "EXIT")) {
             break;
         }
-//        clientMsg[1024] = '\0';
-//        puts(clientMsg);
-//        puts("after");
+        clientMsg[sizeof(clientMsg) -1] = '\0';
+        puts(clientMsg);
+        memset(clientMsg,0, strlen(clientMsg));
     }
 
     if (read_size == 0) {

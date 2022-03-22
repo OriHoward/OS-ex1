@@ -1,5 +1,1 @@
-[LOG] child proccess terminated.
-[LOG] child proccess terminated.
-[LOG] child proccess terminated.
-[LOG] child proccess terminated.
-[LOG] child proccess terminated.
+random text YES MASTER

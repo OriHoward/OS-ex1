@@ -37,7 +37,7 @@ void CShell() {
         } else if (0 == pid) {
             // execute a command
             if (execvp(argv[0], argv) == -1) {
-                break;
+                return;
             }
         } else {
             waitpid(pid, NULL, 0);
@@ -222,7 +222,9 @@ void handleDir() {
     dr = opendir(".");
     if (dr) {
         while ((dir = readdir(dr)) != NULL) {
-            printf("%s\n", dir->d_name);
+            if (strcmp(dir->d_name, ".") && strcmp(dir->d_name,"..")) {
+                printf("%s\n", dir->d_name);
+            }
         }
         closedir(dr);
     }
