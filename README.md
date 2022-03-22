@@ -4,5 +4,5 @@
   make shell -> ./shell
 
 
-## How to run the server"
+## How to run the server:
   make server -> ./server
