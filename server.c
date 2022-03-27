@@ -36,25 +36,26 @@ int main() {
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
 
-
-    clientSock = accept(sock, (struct sockaddr *) &client, (socklen_t *) &c);
-    if (clientSock < 0) {
-        perror("accept failed");
-        return 1;
-    }
-    puts("Connection accepted");
-
-
-    //Receive a message from client
-    while ((read_size = recv(clientSock, clientMsg, sizeof(clientMsg), 0)) > 0) {
-        if (!strcmp(clientMsg, "EXIT")) {
-            break;
+    while (1) {
+        clientSock = accept(sock, (struct sockaddr *) &client, (socklen_t *) &c);
+        if (clientSock < 0) {
+            perror("accept failed");
+            return 1;
         }
-        clientMsg[sizeof(clientMsg) -1] = '\0';
-        puts(clientMsg);
-        memset(clientMsg,0, sizeof (clientMsg));
-        clientMsg[sizeof(clientMsg) -1] = '\0';
+        puts("Connection accepted");
 
+
+        //Receive a message from client
+        while ((read_size = recv(clientSock, clientMsg, sizeof(clientMsg), 0)) > 0) {
+            if (!strcmp(clientMsg, "EXIT")) {
+                break;
+            }
+            clientMsg[sizeof(clientMsg) - 1] = '\0';
+            puts(clientMsg);
+            memset(clientMsg, 0, sizeof(clientMsg));
+            clientMsg[sizeof(clientMsg) - 1] = '\0';
+
+        }
     }
 
     if (read_size == 0) {
