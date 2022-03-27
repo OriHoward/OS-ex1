@@ -22,7 +22,12 @@ void CShell() {
         // bypass empty commands
         if (!strcmp("", cmd)) continue;
         // check for "exit" command
-        if (!strcmp("EXIT", cmd)) break;
+        if (!strcmp("EXIT", cmd)) {
+            if (isConnected) {
+                printf("EXIT");
+            }
+            break;
+        }
         // handle commands
         if (handleCmd()) { continue; }
 
@@ -222,7 +227,7 @@ void handleDir() {
     dr = opendir(".");
     if (dr) {
         while ((dir = readdir(dr)) != NULL) {
-            if (strcmp(dir->d_name, ".") && strcmp(dir->d_name,"..")) {
+            if (strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..")) {
                 printf("%s\n", dir->d_name);
             }
         }

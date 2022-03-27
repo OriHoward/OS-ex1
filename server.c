@@ -8,6 +8,7 @@
 int main() {
     int sock, clientSock, c, read_size;
     struct sockaddr_in server, client;
+    int running = 1;
     char clientMsg[1024];
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -36,7 +37,7 @@ int main() {
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
 
-    while (1) {
+    while (running) {
         clientSock = accept(sock, (struct sockaddr *) &client, (socklen_t *) &c);
         if (clientSock < 0) {
             perror("accept failed");
@@ -48,6 +49,7 @@ int main() {
         //Receive a message from client
         while ((read_size = recv(clientSock, clientMsg, sizeof(clientMsg), 0)) > 0) {
             if (!strcmp(clientMsg, "EXIT")) {
+                running = 0;
                 break;
             }
             clientMsg[sizeof(clientMsg) - 1] = '\0';
