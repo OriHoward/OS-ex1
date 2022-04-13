@@ -2,16 +2,16 @@ CC = gcc
 AR = ar
 CFLAGS = -Wall
 
-all: shell server
+all: main server
 
-shell: shell.o client.o
-	${CC} ${CFLAGS} -o shell shell.o client.o
+main: main.o client.o
+	${CC} ${CFLAGS} -o main main.o client.o
 
 server: server.o
 	${CC} ${CFLAGS} -o server server.o
 
-shell.o: shell.c client.h shell.h
-	${CC} ${CFLAGS} -c shell.c
+main.o: main.c client.h main.h
+	${CC} ${CFLAGS} -c main.c
 
 server.o: server.c
 	${CC} ${CFLAGS} -c server.c
@@ -20,4 +20,4 @@ client.o: client.c client.h
 	${CC} ${CFLAGS} -c client.c
 
 clean:
-	rm -f *.a *.o shell server
+	rm -f *.a *.o main server
